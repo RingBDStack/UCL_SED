@@ -118,31 +118,17 @@ def edl_loss(func, y, true_labels,alpha, epoch_num, num_classes, annealing_step,
         torch.tensor(1.0, dtype=torch.float32),
         torch.tensor((epoch_num+1) / 10, dtype=torch.float32),
     )
-    #
-    # kl_alpha = (alpha - 1) * (1 - y) + 1
-    # kl_div = annealing_coef * kl_divergence(kl_alpha, num_classes, device=device)
-    # kl_pred_div = (1-annealing_coef) * kl_pred_divergence(alpha, y,num_classes, device=device)
-    # print("kl_div:",torch.mean(kl_div),"kl_pred:",torch.mean(kl_pred_div))
-    # return A    + kl_div + kl_pred_div
+
 
     _, pred_label = torch.max(alpha, 1)
     true_indices = torch.where(pred_label == true_labels)
     false_indices = torch.where(pred_label != true_labels)
     kl_alpha = (alpha - 1) * (1 - y) + 1
     kl_div = annealing_coef * kl_divergence(kl_alpha, num_classes, device=device)
-    # kl_pred_div = annealing_coef * kl_pred_divergence(alpha/S, y,num_classes, device=device)
-    # kl_div = kl_div
-    # kl_pred_div = kl_pred_div
     print("kl_div:",1*torch.mean(kl_div))
     print("A:",20*torch.mean(A))
-    # _, pred_label = torch.max(alpha, 1)
-    # true_indices = torch.where(pred_label == true_labels)
-    # false_indices = torch.where(pred_label != true_labels)
-    # kl_div = annealing_coef*kl_divergence(kl_alpha[false_indices],num_classes, device=device)
-    # kl_pred_div = annealing_coef*kl_pred_divergence(alpha[true_indices],y[true_indices],num_classes,device=device)
-    # # # print("kl_div:", torch.mean(kl_div),torch.mean(kl_pred_div))
-    # print("kl_div:",torch.mean(kl_div))
-    return 1*A + 1*kl_div #+ torch.mean(kl_pred_div)
+
+    return 20*A + 1*kl_div 
 
 
 def edl_mse_loss(alpha, target, epoch_num, num_classes, annealing_step, device):
